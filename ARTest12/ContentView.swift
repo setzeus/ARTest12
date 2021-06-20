@@ -11,7 +11,7 @@ import ARKit
 
 struct ContentView: View {
     
-    @State var shuffledClicked = false
+    @State var shuffledClicked = true
     
     var body: some View {
         ZStack {
@@ -49,6 +49,7 @@ struct ARViewContainer: UIViewRepresentable {
     
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
+        arView.addCoaching()
         arView.scene.addAnchor(mainAnchor)
         return arView
     }
@@ -67,6 +68,24 @@ struct ARViewContainer: UIViewRepresentable {
         }
     }
     
+}
+
+extension ARView: ARCoachingOverlayViewDelegate {  func addCoaching() {    // Create a ARCoachingOverlayView object
+    let coachingOverlay = ARCoachingOverlayView()
+    // Make sure it rescales if the device orientation changes
+    coachingOverlay.autoresizingMask = [
+      .flexibleWidth, .flexibleHeight
+    ]
+    self.addSubview(coachingOverlay)    // Set the Augmented Reality goal
+    coachingOverlay.goal = .horizontalPlane    // Set the ARSession
+    coachingOverlay.session = self.session    // Set the delegate for any callbacks
+    coachingOverlay.delegate = self
+  }  // Example callback for the delegate object
+public func coachingOverlayViewDidDeactivate(
+    _ coachingOverlayView: ARCoachingOverlayView
+  ) {
+    print("horizontal surface found")
+  }
 }
 
 struct ContentView_Previews: PreviewProvider {
