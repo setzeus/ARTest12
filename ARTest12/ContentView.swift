@@ -55,17 +55,33 @@ struct ARViewContainer: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: ARView, context: Context) {
+        
+        var startingColorR:Float = Float.random(in: 70..<185)/255
+        var startingColorG:Float = Float.random(in: 70..<185)/255
+        var startingColorB:Float = Float.random(in: 70..<185)/255
+        
         if shuffledClicked {
             print("shuffled clicked ran...")
+            mainAnchor.children.removeAll()
             for child in -3...3 {
+                
+                startingColorR = startingColorR + Float(Float(child+3)*5/255)
+                startingColorG = startingColorG + Float(Float(child+3)*5/255)
+                startingColorB = startingColorB + Float(Float(child+3)*5/255)
+                
                 let entity = ModelEntity(
                     mesh: MeshResource.generateBox(size: 0.01*Float((child+4))),
-                    materials: [SimpleMaterial(color: .white, isMetallic: true)]
+                    materials: [SimpleMaterial(color: UIColor(red: CGFloat(startingColorR), green: CGFloat(startingColorG), blue: CGFloat(startingColorB), alpha: 1.0), isMetallic: false)]
                 )
+                print(startingColorR)
+                print(startingColorG)
+                print(startingColorB)
                 entity.position = [Float(child)/10,0,0]
                 mainAnchor.addChild(entity)
             }
+            shuffledClicked = false
         }
+        
     }
     
 }
